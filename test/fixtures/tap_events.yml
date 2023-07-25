@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dispenser: one
+  status: MyString
+  opened_at: 2023-07-25 18:14:02
+  closed_at: 2023-07-25 18:14:02
+  price: 9.99
+
+two:
+  dispenser: two
+  status: MyString
+  opened_at: 2023-07-25 18:14:02
+  closed_at: 2023-07-25 18:14:02
+  price: 9.99
