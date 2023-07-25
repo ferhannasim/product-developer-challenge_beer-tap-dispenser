@@ -2,9 +2,9 @@
 class DispensersController < ApplicationController
     before_action :authenticate_user
     before_action :set_dispenser, only: [:show, :update]
+    before_action :check_admin, only: [:create]
   
     def index
-        byebug
       @dispensers = Dispenser.all
       render json: @dispensers
     end
@@ -31,6 +31,12 @@ class DispensersController < ApplicationController
     end
   
     private
+
+    def check_admin
+      if !@current_user.admin?
+        render json: {message: "You are not authorized. Only for Admin"}
+      end 
+    end
   
     def set_dispenser
       @dispenser = Dispenser.find(params[:id])
