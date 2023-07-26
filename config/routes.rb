@@ -6,6 +6,14 @@ Rails.application.routes.draw do
     end
   end
   resources :dispensers do
-    resources :tap_events, only: [:create, :update]
+    collection do
+      get 'usage_details'
+    end
+    resources :tap_events, only: [:create, :update] do 
+      collection do
+        get 'usage_details'
+      end
+    end
+
   end
 end
