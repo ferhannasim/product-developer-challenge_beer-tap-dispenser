@@ -14,7 +14,7 @@ class TapEventsController < ApplicationController
   
     def update
       @tap_event = @dispenser.tap_events.find_by(status: 'open', closed_at: nil)
-      if @tap_event.update(closed_at: Time.now)
+      if @tap_event.update(closed_at: Time.now, status: 'closed')
         calculated_price = calculate_price(@tap_event.opened_at, @tap_event.closed_at, @dispenser.flow_volume)
         @tap_event.update(price: calculated_price)
         render json: @tap_event

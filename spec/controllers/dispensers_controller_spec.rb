@@ -26,7 +26,8 @@ RSpec.describe DispensersController, type: :request do
       get '/dispensers', headers: auth_headers(user)
       expect(response).to have_http_status(:ok)
       response_body =  JSON.parse(response.body)
-      expect(response_body.size).to eq(2)
+      
+      expect(response_body.size).to eq(Dispenser.count)
       expect(response_body.first['flow_volume']).to eq(50)
       expect(response_body.last['flow_volume']).to eq(60)
     end
