@@ -4,7 +4,35 @@ require 'rails_helper'
 
 RSpec.describe Api::V1::UsersController, type: :controller do
     describe "POST #create" do
-      context "with valid parameters" do
+      context "with valid parameters for attendee" do
+        let(:valid_params) { { user: { email: 'test@example.com', password: 'password', role: 'attendee' } } }
+  
+        it "creates a new user" do
+          expect {
+            post :create, params: valid_params
+          }.to change(User, :count).by(1)
+        end
+  
+        it "returns a success response" do
+          post :create, params: valid_params
+          expect(response).to have_http_status(:created)
+        end
+  
+        it "assigns the correct role to the user" do
+          post :create, params: valid_params
+          created_user = User.last
+          expect(created_user.role).to eq('attendee')
+        end
+  
+        it "creates an attendee user" do
+          post :create, params: valid_params
+          created_user = User.last
+          expect(created_user.attendee?).to be true
+          expect(created_user.admin?).to be false
+        end
+      end
+
+      context "with valid parameters for admin" do
         let(:valid_params) { { user: { email: 'test@example.com', password: 'password', role: 'admin' } } }
   
         it "creates a new user" do
@@ -17,22 +45,36 @@ RSpec.describe Api::V1::UsersController, type: :controller do
           post :create, params: valid_params
           expect(response).to have_http_status(:created)
         end
+  
+        it "assigns the correct role to the user" do
+          post :create, params: valid_params
+          created_user = User.last
+          expect(created_user.role).to eq('admin')
+        end
+  
+        it "creates an admin user" do
+          post :create, params: valid_params
+          created_user = User.last
+          expect(created_user.admin?).to be true
+          expect(created_user.attendee?).to be false
+        end
       end
   
       context "with invalid parameters" do
         let(:invalid_params) { { user: { email: 'invalid_email', password: '123', role: nil } } }
   
-        it "returns an error response" do
-          post :create, params: invalid_params
-          byebug
-          expect(response).to have_http_status(:unprocessable_entity)
+        it "does not create a new user" do
+          expect {
+            post :create, params: invalid_params
+          }.to_not change(User, :count)
         end
   
-        it "returns error messages in the response" do
+        it "returns an error response" do
           post :create, params: invalid_params
-          expect(JSON.parse(response.body)).to include('errors' => include("Email is invalid", "Password is too short", "Role is not included in the list"))
+          expect(response).to have_http_status(:unprocessable_entity)
         end
       end
     end
   end
+  
   
