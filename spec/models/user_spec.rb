@@ -7,6 +7,13 @@ RSpec.describe User, type: :model do
     let(:admin_user) { User.new(role: 'admin') }
     let(:attendee_user) { User.new(role: 'attendee') }
 
+    describe 'validate user' do
+        let(:user) { User.new(role: nil) }
+        it 'role not exist' do
+            expect(user.valid?).to be false
+        end
+    end
+
     describe '#admin?' do
       it 'returns true for admin role' do
         expect(admin_user.admin?).to be true
