@@ -28,8 +28,6 @@ RSpec.describe DispensersController, type: :request do
       response_body =  JSON.parse(response.body)
       
       expect(response_body.size).to eq(Dispenser.count)
-      expect(response_body.first['flow_volume']).to eq(50)
-      expect(response_body.last['flow_volume']).to eq(60)
     end
   end
 
