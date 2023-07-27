@@ -100,7 +100,7 @@ RSpec.describe DispensersController, type: :request do
       response_body =  JSON.parse(response.body)
 
       expect(response_body['total_cost'].to_f).to eq(25.0)
-      expect(response_body['Dispenser_used']).to eq(2)
+      expect(response_body['dispenser_used']).to eq(Dispenser.count)
     end
   end
 end

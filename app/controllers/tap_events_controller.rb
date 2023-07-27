@@ -24,16 +24,13 @@ class TapEventsController < ApplicationController
     end
   
     def usage_details
-      @tap_events = TapEvent.find_tap_events_dispenser(@dispenser.id)
-      total_cost = @tap_events.pluck(:price).compact.sum
-
-      time_intervals = @tap_events.get_time_intervals
+      result = TapEvent.dispenser_usage_details(@dispenser.id)
 
       render json: {
-        total_cost: total_cost,
-        dispenser_used: @tap_events.count,
-        "total_time_spend_in_hours": @tap_events.convert_to_time(time_intervals.sum),
-        "total_time_spend_in_seconds": time_intervals.sum,
+        total_cost: result[:total_cost],
+        dispenser_used: result[:dispenser_used],
+        total_time_spend: result[:total_time_spend],
+        total_time_spend_formatted: result[:total_time_spend_formatted]
       }
     end
   

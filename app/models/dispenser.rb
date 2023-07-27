@@ -13,6 +13,7 @@ class Dispenser < ApplicationRecord
       
         {
           total_cost: total_cost,
+          dispenser_used: self.count,
           total_time_spend: total_time_spend,
           total_time_spend_formatted: convert_to_time(total_time_spend)
         }

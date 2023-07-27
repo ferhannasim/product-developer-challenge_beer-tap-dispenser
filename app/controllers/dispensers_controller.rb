@@ -1,6 +1,6 @@
 # app/controllers/dispensers_controller.rb
 class DispensersController < ApplicationController
-    # before_action :authenticate_user, except: [:usage_details]
+    before_action :authenticate_user, except: [:usage_details]
     before_action :set_dispenser, only: [:show, :update]
     before_action :check_admin, only: [:create]
   
@@ -35,6 +35,7 @@ class DispensersController < ApplicationController
 
       render json: {
         total_cost: result[:total_cost],
+        dispenser_used: result[:dispenser_used],
         total_time_spend: result[:total_time_spend],
         total_time_spend_formatted: result[:total_time_spend_formatted]
       }

@@ -4,7 +4,7 @@ class TapEvent < ApplicationRecord
 
   scope :find_open_tap_dispenser, ->(dispenser_id) { find_by(status: 'open', closed_at: nil, dispenser_id: dispenser_id) }
 
-  scope :find_tap_events_dispenser, ->(dispenser_id) { where(id: dispenser_id) }
+  scope :find_tap_events_dispenser, ->(dispenser_id) { where(dispenser_id: dispenser_id) }
 
   def self.convert_to_time(seconds)
     time = Time.at(seconds).utc
@@ -18,12 +18,21 @@ class TapEvent < ApplicationRecord
     return price
   end
 
-  def self.get_time_intervals
+  def self.dispenser_usage_details(dispenser_id)
+    tap_events = find_tap_events_dispenser(dispenser_id)
+    total_cost = tap_events.pluck(:price).compact.sum
+
     total = 0
-    where.not(closed_at: nil).map do |event|
-      time_interval = event.closed_at - event.opened_at
-      total += time_interval
-      time_interval
+    total_time_spend = tap_events.where.not(closed_at: nil).map do |event|
+      total += event.closed_at - event.opened_at
+      total
     end
+
+    {
+      total_cost: total_cost,
+      dispenser_used: tap_events.count,
+      total_time_spend: total_time_spend.sum,
+      total_time_spend_formatted: convert_to_time(total_time_spend.sum)
+    }
   end
 end
